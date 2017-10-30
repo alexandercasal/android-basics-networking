@@ -4,7 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.example.android.quakereport.R
 import com.example.android.quakereport.model.EarthquakeListAdapter
-import com.example.android.quakereport.service.DataService
+import com.example.android.quakereport.model.QuakeUtils
 import kotlinx.android.synthetic.main.earthquake_activity.*
 
 class EarthquakeActivity : AppCompatActivity() {
@@ -13,6 +13,6 @@ class EarthquakeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.earthquake_activity)
 
-        list_earthquakes.adapter = EarthquakeListAdapter(this, DataService.getPlaceholderEarthquakes())
+        list_earthquakes.adapter = EarthquakeListAdapter(this, QuakeUtils.extractEarthquakes())
     }
 }
