@@ -15,6 +15,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
         tools:text="7.2" />
 
     <TextView
@@ -28,21 +29,33 @@
         android:ellipsize="end"
         android:maxLines="2"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/text_quake_time"
+        app:layout_constraintEnd_toStartOf="@+id/text_quake_date"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/text_quake_magnitude"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
         tools:text="London" />
+
+    <TextView
+        android:id="@+id/text_quake_date"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:textAlignment="textEnd"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Oct 28, 2017" />
 
     <TextView
         android:id="@+id/text_quake_time"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
+        android:textAlignment="textEnd"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Oct 28, 2017" />
+        app:layout_constraintTop_toBottomOf="@+id/text_quake_date"
+        tools:text="9:10 PM" />
 </android.support.constraint.ConstraintLayout>
