@@ -32,7 +32,7 @@ object QuakeUtils {
             val root = JSONObject(SAMPLE_JSON_RESPONSE)
             val features = root.getJSONArray("features")
 
-            for (i in 0..features.length()) {
+            for (i in 0..features.length() - 1) {
                 val feature = features.getJSONObject(i)
                 val properties = feature.getJSONObject("properties")
 

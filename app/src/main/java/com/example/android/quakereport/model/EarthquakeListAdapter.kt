@@ -8,7 +8,6 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 import com.example.android.quakereport.R
 import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
 
 /**
  * Adapter to display a list of earthquakes
@@ -50,17 +49,38 @@ class EarthquakeListAdapter(val context: Context, val earthquakes: ArrayList<Ear
 
     private inner class ViewHolder(view: View) {
         val quakeMagnitude: TextView = view.findViewById(R.id.text_quake_magnitude)
-        val quakeLocation: TextView = view.findViewById(R.id.text_quake_location)
+        val quakeLocOffset: TextView = view.findViewById(R.id.text_quake_loc_offset)
+        val quakeLocation: TextView = view.findViewById(R.id.text_quake_primary_location)
         val quakeDate: TextView = view.findViewById(R.id.text_quake_date)
         val quakeTime: TextView = view.findViewById(R.id.text_quake_time)
 
         fun bindEarthquake(earthquake: Earthquake) {
             val dateFormatter = SimpleDateFormat("LLL dd, yyyy")
             val timeFormatter = SimpleDateFormat("h:mm a")
+            val locationParts = getLocationParts(earthquake.location)
+
             quakeMagnitude.text = earthquake.magnitude.toString()
-            quakeLocation.text = earthquake.location
+            quakeLocOffset.text = locationParts[0]
+            quakeLocation.text = locationParts[1]
             quakeDate.text = dateFormatter.format(earthquake.time)
             quakeTime.text = timeFormatter.format(earthquake.time)
+        }
+
+        private fun getLocationParts(location: String): Array<String> {
+            val delimiter = " of "
+            val offsetIndex = location.indexOf(delimiter)
+
+            if (location.contains(delimiter)) {
+                return arrayOf(
+                        location.substring(0, (offsetIndex + delimiter.length)),
+                        location.substring((offsetIndex + delimiter.length)..(location.length - 1))
+                )
+            } else {
+                return arrayOf(
+                        "Near the",
+                        location
+                )
+            }
         }
     }
 }
