@@ -39,7 +39,8 @@ object QuakeUtils {
                 val magnitude: Float = properties.getDouble("mag").toFloat()
                 val location: String = properties.getString("place")
                 val milliseconds: Long = properties.getLong("time")
-                earthquakes.add(Earthquake(magnitude, location, milliseconds))
+                val url: String = properties.getString("url")
+                earthquakes.add(Earthquake(magnitude, location, milliseconds, url))
             }
         } catch (e: JSONException) {
             Log.e("QueryUtils", "Problem parsing the earthquake JSON results", e)
