@@ -2,11 +2,14 @@ package com.example.android.quakereport.controller
 
 import android.content.Intent
 import android.net.Uri
+import android.os.AsyncTask
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import com.example.android.quakereport.R
 import com.example.android.quakereport.model.Earthquake
+import com.example.android.quakereport.model.URL_USGS_EARTHQUAKE_API
 import kotlinx.android.synthetic.main.earthquake_activity.*
 
 class EarthquakeActivity : AppCompatActivity() {
@@ -40,6 +43,25 @@ class EarthquakeActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, urlErrorMsg, Toast.LENGTH_SHORT).show()
             }
+        }
+
+        LoadEarthquakesAsyncTask().execute(URL_USGS_EARTHQUAKE_API)
+    }
+
+    private inner class LoadEarthquakesAsyncTask : AsyncTask<String, Void, List<Earthquake>>() {
+
+        override fun onPreExecute() {
+            progress_load_earthquakes.visibility = View.VISIBLE
+            list_earthquakes.isEnabled = false
+        }
+
+        override fun doInBackground(vararg endpoint: String): List<Earthquake> {
+            return ArrayList<Earthquake>()
+        }
+
+        override fun onPostExecute(earthquakes: List<Earthquake>) {
+            progress_load_earthquakes.visibility = View.GONE
+            list_earthquakes.isEnabled = true
         }
     }
 }
