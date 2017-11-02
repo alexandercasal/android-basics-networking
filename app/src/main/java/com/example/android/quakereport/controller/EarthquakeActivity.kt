@@ -7,8 +7,6 @@ import android.os.Bundle
 import android.widget.Toast
 import com.example.android.quakereport.R
 import com.example.android.quakereport.model.Earthquake
-import com.example.android.quakereport.model.EarthquakeListAdapter
-import com.example.android.quakereport.model.QuakeUtils
 import kotlinx.android.synthetic.main.earthquake_activity.*
 
 class EarthquakeActivity : AppCompatActivity() {
@@ -17,7 +15,10 @@ class EarthquakeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.earthquake_activity)
 
-        list_earthquakes.adapter = EarthquakeListAdapter(this, QuakeUtils.extractEarthquakes())
+        initEarthquakeListView()
+    }
+
+    private fun initEarthquakeListView() {
         list_earthquakes.setOnItemClickListener { adapterView, view, i, l ->
             val quake: Earthquake? = adapterView.getItemAtPosition(i) as? Earthquake
             val urlErrorMsg = "Unable to open details"
