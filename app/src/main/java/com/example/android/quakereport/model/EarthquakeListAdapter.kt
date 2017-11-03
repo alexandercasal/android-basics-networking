@@ -13,11 +13,12 @@ import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 
 /**
- * Adapter to display a list of earthquakes
+ * Adapter to display a list of earthquake information such as magnitude, location, and
+ * date of occurrence
  *
  * @author Alexander Casal
  */
-class EarthquakeListAdapter(val context: Context, val earthquakes: ArrayList<Earthquake>)
+class EarthquakeListAdapter(val context: Context, val earthquakes: List<Earthquake>)
     : BaseAdapter() {
 
     private val mLayoutInflater = LayoutInflater.from(context)
