@@ -1,23 +1,21 @@
 package com.example.android.quakereport.controller
 
+import android.app.LoaderManager
 import android.content.Intent
+import android.content.Loader
 import android.net.Uri
-import android.os.AsyncTask
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.ListView
-import android.widget.ProgressBar
 import android.widget.Toast
 import com.example.android.quakereport.R
-import com.example.android.quakereport.model.Earthquake
-import com.example.android.quakereport.model.EarthquakeListAdapter
-import com.example.android.quakereport.model.QuakeUtils
-import com.example.android.quakereport.model.URL_USGS_EARTHQUAKE_API
+import com.example.android.quakereport.model.*
 import kotlinx.android.synthetic.main.earthquake_activity.*
-import java.lang.ref.WeakReference
 
-class EarthquakeActivity : AppCompatActivity() {
+class EarthquakeActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<MutableList<Earthquake>> {
+
+    private val LOADER_EARTHQUAKE_ID = 1
+    private lateinit var mAdapter: EarthquakeListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +26,7 @@ class EarthquakeActivity : AppCompatActivity() {
 
     /**
      * Set up the earthquakes list view with a click listener and triggers loading
-     * the earthquake data from USGS in the background
+     * the earthquake data from USGS in the background.
      */
     private fun initEarthquakeListView() {
         list_earthquakes.setOnItemClickListener { adapterView, view, i, l ->
@@ -53,37 +51,38 @@ class EarthquakeActivity : AppCompatActivity() {
                 Toast.makeText(this, urlErrorMsg, Toast.LENGTH_SHORT).show()
             }
         }
-        LoadEarthquakesAsyncTask(WeakReference(this)).execute(URL_USGS_EARTHQUAKE_API)
+
+        mAdapter = EarthquakeListAdapter(this, ArrayList<Earthquake>())
+        list_earthquakes.adapter = mAdapter
+        loaderManager.initLoader(LOADER_EARTHQUAKE_ID, null, this)
     }
 
-    private class LoadEarthquakesAsyncTask(val activity: WeakReference<EarthquakeActivity>)
-        : AsyncTask<String, Void, List<Earthquake>>() {
-
-        override fun onPreExecute() {
-            activity.get()?.findViewById<ProgressBar>(R.id.progress_load_earthquakes)
-                    ?.visibility = View.VISIBLE
-            activity.get()?.findViewById<ListView>(R.id.list_earthquakes)
-                    ?.isEnabled = false
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<MutableList<Earthquake>>? {
+        if (id == LOADER_EARTHQUAKE_ID) {
+            progress_load_earthquakes.visibility = View.VISIBLE
+            return EarthquakeLoader(
+                    this,
+                    URL_USGS_EARTHQUAKE_API
+            )
         }
 
-        override fun doInBackground(vararg endpoint: String): List<Earthquake> {
-            if (endpoint.isNotEmpty() && endpoint[0].isNotEmpty()) {
-                val quakeUtils = QuakeUtils
-                return quakeUtils.loadEarthquakes(endpoint[0])
-            }
+        return null
+    }
 
-            return ArrayList<Earthquake>()
-        }
+    override fun onLoadFinished(loader: Loader<MutableList<Earthquake>>, data: MutableList<Earthquake>?) {
+        if (loader.id == LOADER_EARTHQUAKE_ID) {
+            progress_load_earthquakes.visibility = View.GONE
+            mAdapter.clear()
 
-        override fun onPostExecute(earthquakes: List<Earthquake>) {
-            activity.get()?.let {
-                val earthquakeListView: ListView = it.findViewById(R.id.list_earthquakes)
-                earthquakeListView.adapter = EarthquakeListAdapter(it, earthquakes)
-                earthquakeListView.isEnabled = true
-                it.findViewById<ProgressBar>(R.id.progress_load_earthquakes).visibility = View.GONE
+            if (data != null && data.isNotEmpty()) {
+                mAdapter.addAll(data)
             }
         }
+    }
 
-
+    override fun onLoaderReset(loader: Loader<MutableList<Earthquake>>) {
+        if (loader.id == LOADER_EARTHQUAKE_ID) {
+            mAdapter.clear()
+        }
     }
 }

@@ -18,7 +18,7 @@ import java.text.SimpleDateFormat
  *
  * @author Alexander Casal
  */
-class EarthquakeListAdapter(val context: Context, val earthquakes: List<Earthquake>)
+class EarthquakeListAdapter(val context: Context, val earthquakes: MutableList<Earthquake>)
     : BaseAdapter() {
 
     private val mLayoutInflater = LayoutInflater.from(context)
@@ -51,6 +51,22 @@ class EarthquakeListAdapter(val context: Context, val earthquakes: List<Earthqua
         return view
     }
 
+    /**
+     * Removes all earthquakes from the adapter
+     */
+    fun clear() {
+        earthquakes.clear()
+        notifyDataSetChanged()
+    }
+
+    /**
+     * Append the provided earthquakes to the current list in the adapter
+     */
+    fun addAll(earthquakes: MutableList<Earthquake>) {
+        this.earthquakes.addAll(earthquakes)
+        notifyDataSetChanged()
+    }
+
     private inner class ViewHolder(view: View) {
         val quakeMagnitude: TextView = view.findViewById(R.id.text_quake_magnitude)
         val quakeLocOffset: TextView = view.findViewById(R.id.text_quake_loc_offset)
@@ -72,6 +88,11 @@ class EarthquakeListAdapter(val context: Context, val earthquakes: List<Earthqua
             quakeTime.text = timeFormatter.format(earthquake.time)
         }
 
+        /**
+         * The USGS sends the location as a single String containing the distance from the location
+         * and the location itself. This method splits the distance and location into two strings.
+         * If a specific distance doesn't exist, "Near the" is used in its place
+         */
         private fun getLocationParts(location: String): Array<String> {
             val delimiter = " of "
             val offsetIndex = location.indexOf(delimiter)

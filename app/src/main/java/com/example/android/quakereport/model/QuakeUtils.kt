@@ -23,12 +23,12 @@ object QuakeUtils {
     /**
      * Loads the earthquake data from the USGS
      */
-    fun loadEarthquakes(url: String): List<Earthquake> {
+    fun loadEarthquakes(url: String): MutableList<Earthquake> {
         val endpointURL = parseURL(url)
         val response = endpointURL?.let {
             makeHTTPRequest(it)
         }
-        val earthquakes: List<Earthquake> = response?.let {
+        val earthquakes: MutableList<Earthquake> = response?.let {
             parseEarthquakesJSON(it)
         } ?: ArrayList<Earthquake>()
 
@@ -105,7 +105,7 @@ object QuakeUtils {
      * @param json geojson containing a root JSON object
      * @return List of 0 or more Earthquakes
      */
-    private fun parseEarthquakesJSON(json: String): List<Earthquake> {
+    private fun parseEarthquakesJSON(json: String): MutableList<Earthquake> {
         val earthquakes = ArrayList<Earthquake>()
 
         try {
