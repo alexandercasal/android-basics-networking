@@ -1,8 +1,11 @@
 package com.example.android.quakereport.controller
 
 import android.app.LoaderManager
+import android.content.Context
 import android.content.Intent
 import android.content.Loader
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -57,8 +60,15 @@ class EarthquakeActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Mu
         list_earthquakes.emptyView = text_no_earthquakes_found
         mAdapter = EarthquakeListAdapter(this, ArrayList<Earthquake>())
         list_earthquakes.adapter = mAdapter
-        Log.i(TAG, "initLoader called")
-        loaderManager.initLoader(LOADER_EARTHQUAKE_ID, null, this)
+
+        val cm = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
+        if (activeNetwork != null && activeNetwork.isConnectedOrConnecting) {
+            Log.i(TAG, "initLoader called")
+            loaderManager.initLoader(LOADER_EARTHQUAKE_ID, null, this)
+        } else {
+            text_no_earthquakes_found.text = getString(R.string.no_internet_connection)
+        }
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<MutableList<Earthquake>>? {
