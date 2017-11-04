@@ -6,6 +6,7 @@ import android.content.Loader
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.example.android.quakereport.R
@@ -14,6 +15,7 @@ import kotlinx.android.synthetic.main.earthquake_activity.*
 
 class EarthquakeActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<MutableList<Earthquake>> {
 
+    private val TAG = EarthquakeActivity::class.java.simpleName
     private val LOADER_EARTHQUAKE_ID = 1
     private lateinit var mAdapter: EarthquakeListAdapter
 
@@ -52,13 +54,16 @@ class EarthquakeActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Mu
             }
         }
 
+        list_earthquakes.emptyView = text_no_earthquakes_found
         mAdapter = EarthquakeListAdapter(this, ArrayList<Earthquake>())
         list_earthquakes.adapter = mAdapter
+        Log.i(TAG, "initLoader called")
         loaderManager.initLoader(LOADER_EARTHQUAKE_ID, null, this)
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<MutableList<Earthquake>>? {
         if (id == LOADER_EARTHQUAKE_ID) {
+            Log.i(TAG, "onCreateLoader for loader $LOADER_EARTHQUAKE_ID")
             progress_load_earthquakes.visibility = View.VISIBLE
             return EarthquakeLoader(
                     this,
@@ -71,6 +76,8 @@ class EarthquakeActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Mu
 
     override fun onLoadFinished(loader: Loader<MutableList<Earthquake>>, data: MutableList<Earthquake>?) {
         if (loader.id == LOADER_EARTHQUAKE_ID) {
+            text_no_earthquakes_found.text = getString(R.string.no_earthquakes_found)
+            Log.i(TAG, "Loader $LOADER_EARTHQUAKE_ID finished loading")
             progress_load_earthquakes.visibility = View.GONE
             mAdapter.clear()
 
@@ -82,6 +89,7 @@ class EarthquakeActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Mu
 
     override fun onLoaderReset(loader: Loader<MutableList<Earthquake>>) {
         if (loader.id == LOADER_EARTHQUAKE_ID) {
+            Log.e(TAG, "Resetting loader $LOADER_EARTHQUAKE_ID")
             mAdapter.clear()
         }
     }
