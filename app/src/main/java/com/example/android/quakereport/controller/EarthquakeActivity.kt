@@ -10,6 +10,8 @@ import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.example.android.quakereport.R
@@ -69,6 +71,22 @@ class EarthquakeActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Mu
         } else {
             text_no_earthquakes_found.text = getString(R.string.no_internet_connection)
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+        if (id == R.id.action_settings) {
+            val settingsIntent = Intent(this, SettingsActivity::class.java)
+            startActivity(settingsIntent)
+            return true
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<MutableList<Earthquake>>? {
