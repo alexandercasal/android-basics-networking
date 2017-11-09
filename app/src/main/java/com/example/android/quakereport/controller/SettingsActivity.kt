@@ -12,5 +12,11 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
     }
 
-    class EarthquakePreferenceFragment : PreferenceFragment()
+    class EarthquakePreferenceFragment : PreferenceFragment() {
+
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            addPreferencesFromResource(R.xml.settings_main)
+        }
+    }
 }
