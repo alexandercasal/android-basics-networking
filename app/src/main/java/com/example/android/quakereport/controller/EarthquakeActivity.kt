@@ -100,6 +100,9 @@ class EarthquakeActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Mu
             val magnitude = sharedPreferences.getString(
                     getString(R.string.settings_min_magnitude_key),
                     getString(R.string.settings_min_magnitude_default))
+            val orderBy = sharedPreferences.getString(
+                    getString(R.string.settings_order_by_key),
+                    getString(R.string.settings_order_by_default))
 
             val baseUri = Uri.parse(URL_USGS_EARTHQUAKE_API)
             val uriBuilder = baseUri.buildUpon()
@@ -107,7 +110,7 @@ class EarthquakeActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Mu
             uriBuilder.appendQueryParameter("format", "geojson")
             uriBuilder.appendQueryParameter("limit", "10")
             uriBuilder.appendQueryParameter("minmag", magnitude)
-            uriBuilder.appendQueryParameter("orderby", "time")
+            uriBuilder.appendQueryParameter("orderby", orderBy)
 
             return EarthquakeLoader(
                     this,
